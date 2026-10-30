@@ -1,0 +1,20 @@
+{
+  "appId": "com.example.ghars",
+  "appName": "غرس",
+  "webDir": "www",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#dff4ea",
+    "scheme": "Ghars"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false,
+      "backgroundColor": "#dff4ea",
+      "showSpinner": false
+    },
+    "LocalNotifications": {
+      "iconColor": "#114836"
+    }
+  }
+}

@@ -1,0 +1,48 @@
+# بناء نسخة iOS ورفعها على TestFlight تلقائيًا مع كل push على main
+# قبل أول تشغيل: أضف مفتاح App Store Connect API في Codemagic
+# (Team settings → Integrations → App Store Connect) باسم "Ghars ASC"
+workflows:
+  ios-testflight:
+    name: iOS → TestFlight
+    instance_type: mac_mini_m2
+    max_build_duration: 45
+    integrations:
+      app_store_connect: Ghars ASC
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.example.ghars   # غيّرها لنفس Bundle ID في App Store Connect
+      vars:
+        XCODE_PROJECT: ios/App/App.xcodeproj
+        XCODE_SCHEME: App
+        APP_STORE_APPLE_ID: 0000000000         # رقم Apple ID للتطبيق من App Store Connect → App Information
+      node: 22
+      xcode: latest
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+    scripts:
+      - name: تثبيت الحزم
+        script: npm ci
+      - name: مزامنة Capacitor
+        script: npx cap sync ios
+      - name: إعداد التوقيع
+        script: xcode-project use-profiles --project "$XCODE_PROJECT"
+      - name: بناء ملف ipa
+        script: |
+          LATEST=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" 2>/dev/null || echo 0)
+          BUILD=$((LATEST + 1))
+          echo "رقم البناء: $BUILD"
+          xcode-project build-ipa \
+            --project "$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME" \
+            --archive-xcargs "CURRENT_PROJECT_VERSION=$BUILD"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true

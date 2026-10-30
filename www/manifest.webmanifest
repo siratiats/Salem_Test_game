@@ -1,0 +1,11 @@
+{
+  "name": "غرس — ركّز وازرع",
+  "short_name": "غرس",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#dff4ea",
+  "theme_color": "#114836",
+  "icons": [{ "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

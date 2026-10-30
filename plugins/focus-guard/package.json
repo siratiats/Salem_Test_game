@@ -1,0 +1,8 @@
+{
+  "name": "ghars-focus-guard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "يفرّق بين قفل الشاشة والخروج من التطبيق وقت جلسة التركيز",
+  "files": ["ios/Sources", "Package.swift"],
+  "capacitor": { "ios": { "src": "ios" } }
+}

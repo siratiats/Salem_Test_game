@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>غرس — ركّز وازرع</title>
+  <meta name="description" content="مؤقت تركيز يزرع لك شجرة كل ما ركزت، وتذبل لو تركت الجوال.">
+  <meta name="theme-color" content="#114836">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon.svg">
+  <link rel="stylesheet" href="fonts/fonts.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- الشاشة الرئيسية -->
+    <section id="home" class="screen active" data-screen="home">
+      <header class="bar">
+        <button class="icon-btn" data-open-drawer aria-label="القائمة">☰</button>
+        <div class="seg" id="modeSeg" role="tablist" aria-label="نوع المؤقت">
+          <button data-mode="countdown" role="tab">⏳ عد تنازلي</button>
+          <button data-mode="stopwatch" role="tab">⏱ ساعة إيقاف</button>
+        </div>
+        <div class="coins" id="coins" aria-label="العملات">🪙 <b>0</b></div>
+      </header>
+
+      <p class="motto" id="motto">ازرع اليوم، وقطوفك بكرة</p>
+
+      <div class="dial-wrap">
+        <svg id="dial" viewBox="0 0 300 300" aria-label="اسحب لتحديد مدة الجلسة">
+          <defs>
+            <radialGradient id="potBg" cx="50%" cy="40%" r="60%">
+              <stop offset="0" stop-color="#fffdf2"/><stop offset="1" stop-color="#e3f3d6"/>
+            </radialGradient>
+          </defs>
+          <circle cx="150" cy="150" r="128" class="ring-track"/>
+          <circle cx="150" cy="150" r="128" class="ring-fill" id="ringFill" transform="rotate(-90 150 150)"/>
+          <circle cx="150" cy="150" r="108" fill="url(#potBg)"/>
+          <ellipse cx="150" cy="222" rx="62" ry="15" fill="#8a5a3b"/>
+          <ellipse cx="150" cy="218" rx="56" ry="10" fill="#a8744d"/>
+          <g id="potTree" transform="translate(72 52) scale(1.56)"></g>
+          <circle id="knob" cx="150" cy="22" r="13"/>
+        </svg>
+        <button class="tree-hit" id="treeHit" aria-label="اختر نوع الشجرة"></button>
+      </div>
+
+      <button class="chip tag-chip" id="tagChip"><i></i><span>دراسة</span> ▾</button>
+      <div class="timer" id="timer">25:00</div>
+      <p class="sub" id="status"></p>
+
+      <div class="actions" id="actions"></div>
+
+      <div class="home-foot" id="homeFoot">
+        <button class="chip" id="deepChip"></button>
+        <button class="chip" id="soundChip"></button>
+      </div>
+
+      <button class="challenge" id="challenge"></button>
+    </section>
+
+    <!-- الغابة -->
+    <section id="forest" class="screen" data-screen="forest">
+      <header class="bar">
+        <button class="icon-btn" data-open-drawer aria-label="القائمة">☰</button>
+        <h2>غابتي</h2>
+        <button class="icon-btn" id="shareForest" aria-label="مشاركة">⤴</button>
+      </header>
+      <div class="periods" data-for="forest"></div>
+      <div class="period-nav" data-for="forest"></div>
+      <div id="forestView" class="forest-view"></div>
+      <div class="card stats-row" id="forestSummary"></div>
+      <h3 class="list-title">سجل الجلسات</h3>
+      <ul class="timeline" id="timeline"></ul>
+    </section>
+
+    <!-- الإحصائيات -->
+    <section id="stats" class="screen" data-screen="stats">
+      <header class="bar">
+        <button class="icon-btn" data-open-drawer aria-label="القائمة">☰</button>
+        <h2>الإحصائيات</h2>
+        <span class="icon-btn"></span>
+      </header>
+      <div class="periods" data-for="stats"></div>
+      <div class="period-nav" data-for="stats"></div>
+      <div class="card stats-row" id="statsTop"></div>
+      <div class="card">
+        <h3>توزيع وقت التركيز</h3>
+        <div id="bars" class="bars"></div>
+      </div>
+      <div class="card">
+        <h3>توزيع الوسوم</h3>
+        <div id="donut" class="donut-wrap"></div>
+      </div>
+    </section>
+
+    <!-- المتجر -->
+    <section id="shop" class="screen" data-screen="shop">
+      <header class="bar">
+        <button class="icon-btn" data-open-drawer aria-label="القائمة">☰</button>
+        <h2>المتجر</h2>
+        <div class="coins">🪙 <b>0</b></div>
+      </header>
+      <p class="hint">تكسب عملتين عن كل دقيقة تركيز، وضعفها لو زرعت شجرة تحدي اليوم.</p>
+      <div class="shop-grid" id="shopGrid"></div>
+    </section>
+
+    <!-- الوسوم -->
+    <section id="tags" class="screen" data-screen="tags">
+      <header class="bar">
+        <button class="icon-btn" data-open-drawer aria-label="القائمة">☰</button>
+        <h2>الوسوم</h2>
+        <span class="icon-btn"></span>
+      </header>
+      <ul class="tag-list" id="tagList"></ul>
+      <form class="card add-tag" id="addTag">
+        <h3>وسم جديد</h3>
+        <input name="name" maxlength="16" placeholder="مثلاً: مذاكرة رياضيات" required>
+        <div class="swatches" id="swatches"></div>
+        <button class="btn primary" type="submit">إضافة</button>
+      </form>
+    </section>
+
+    <!-- استراحة وتنفس -->
+    <section id="breathe" class="screen dark" data-screen="breathe">
+      <header class="bar">
+        <button class="icon-btn" data-open-drawer aria-label="القائمة">☰</button>
+        <h2>مساحة هادئة</h2>
+        <span class="icon-btn"></span>
+      </header>
+      <div class="breathe-word" id="breatheWord">جاهز؟</div>
+      <div class="breathe-bar"><i id="breatheProg"></i></div>
+      <div class="mascot-wrap">
+        <svg id="mascot" viewBox="0 0 200 200" aria-hidden="true">
+          <circle cx="100" cy="100" r="92" fill="#ffffff10"/>
+          <path d="M100 30 C150 30 172 70 170 110 C168 150 140 172 100 172 C60 172 32 150 30 110 C28 70 50 30 100 30Z" fill="#7fd99a"/>
+          <path d="M100 30 Q96 14 108 6 Q112 22 100 30Z" fill="#5cc27c"/>
+          <path d="M70 100 q10 8 20 0 M110 100 q10 8 20 0" stroke="#1f5a3c" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <ellipse cx="66" cy="118" rx="9" ry="5" fill="#ff9fb0" opacity=".6"/>
+          <ellipse cx="134" cy="118" rx="9" ry="5" fill="#ff9fb0" opacity=".6"/>
+          <path d="M92 124 q8 6 16 0" stroke="#1f5a3c" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <p class="sub light" id="breatheCount">شهيق 4 · حبس 4 · زفير 6</p>
+      <div class="actions">
+        <button class="btn primary big" id="breatheBtn">ابدأ التنفس</button>
+        <button class="btn ghost light" data-go="home">ارجع للزراعة</button>
+      </div>
+    </section>
+
+    <!-- الإعدادات -->
+    <section id="settings" class="screen" data-screen="settings">
+      <header class="bar">
+        <button class="icon-btn" data-open-drawer aria-label="القائمة">☰</button>
+        <h2>الإعدادات</h2>
+        <span class="icon-btn"></span>
+      </header>
+      <div class="card settings" id="settingsList"></div>
+      <div class="card">
+        <h3>بياناتك</h3>
+        <p class="hint">كل شي محفوظ على جهازك فقط. ما فيه تتبع ولا حساب.</p>
+        <div class="row-btns">
+          <button class="btn" id="exportBtn">تصدير</button>
+          <label class="btn">استيراد<input type="file" id="importInput" accept="application/json" hidden></label>
+          <button class="btn danger" id="resetBtn">مسح الكل</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- القائمة الجانبية -->
+  <div class="scrim" id="scrim"></div>
+  <nav class="drawer" id="drawer" aria-label="التنقل">
+    <div class="drawer-head">
+      <img src="icons/icon.svg" alt="" width="48" height="48">
+      <div><b>غرس</b><small>ركّز وازرع</small></div>
+    </div>
+    <button data-go="home">🌱 ازرع</button>
+    <button data-go="forest">🌳 غابتي</button>
+    <button data-go="stats">📊 الإحصائيات</button>
+    <button data-go="shop">🛒 المتجر</button>
+    <button data-go="tags">🏷️ الوسوم</button>
+    <button data-go="breathe">🍃 مساحة هادئة</button>
+    <button data-go="settings">⚙️ الإعدادات</button>
+  </nav>
+
+  <!-- نافذة منبثقة -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
+    <div class="sheet" id="sheet"></div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

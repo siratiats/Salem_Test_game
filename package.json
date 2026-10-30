@@ -1,0 +1,24 @@
+{
+  "name": "ghars",
+  "version": "1.0.0",
+  "private": true,
+  "description": "غرس — مؤقت تركيز يزرع لك شجرة",
+  "scripts": {
+    "serve": "python3 -m http.server 8000 -d www",
+    "sync": "cap sync ios",
+    "open": "cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.6.0",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/local-notifications": "^8.3.1",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.4",
+    "ghars-focus-guard": "file:plugins/focus-guard"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.6.0",
+    "@capacitor/ios": "^8.6.0"
+  }
+}
